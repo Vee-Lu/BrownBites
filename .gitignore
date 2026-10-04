@@ -1,0 +1,25 @@
+# Dependencies and build output
+node_modules
+dist
+dist-ssr
+
+# Environment files with real values
+.env
+.env.local
+.env.*.local
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# OS and editor
+.DS_Store
+.idea
+.vscode/*
+!.vscode/extensions.json
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
