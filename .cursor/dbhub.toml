@@ -1,0 +1,12 @@
+# BrownBites Postgres MCP. DATABASE_URL comes from server/.env.
+# execute_sql is read-only unless you explicitly ask to change the database.
+
+[[sources]]
+id = "brownbites"
+dsn = "${DATABASE_URL}"
+
+[[tools]]
+name = "execute_sql"
+source = "brownbites"
+readonly = true
+max_rows = 1000

@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "brownbites-postgres": {
+      "type": "stdio",
+      "command": "sh",
+      "args": ["${workspaceFolder}/.cursor/postgres-mcp.sh"]
+    }
+  }
+}
