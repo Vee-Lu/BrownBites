@@ -6,7 +6,9 @@ Phase 1 — Project Foundation (complete)
 
 Phase 2 — PostgreSQL setup, schema, and migrations (`dining_locations`, `menus`, `food_items`, and `menu_items` exist; no migration runner or seed scripts)
 
-Phase 3 — Backend APIs (Dining Locations API complete; Menus API not started)
+Phase 3 — Backend APIs (dining locations, menus, and foods are readable)
+
+Phase 4 — Frontend browsing for those three APIs (complete)
 
 ## Completed
 
@@ -28,18 +30,19 @@ Phase 3 — Backend APIs (Dining Locations API complete; Menus API not started)
 - Dining Locations API (read-only), wired as Route → Controller → Service → Repository → PostgreSQL:
   - `GET /api/v1/dining-locations`
   - `GET /api/v1/dining-locations/:id`
+- Menus API: `GET /api/v1/dining-locations/:id/menus`
+- Foods API: `GET /api/v1/menus/:id/foods`
+- React dining browser in `client/`: halls, menus, and foods, with loading, error, empty, and stale-request handling. API base URL is `VITE_API_URL`.
 
 ## In Progress
 
-- None. Next task is the Menus API (see Next Step).
+- None.
 
 ## Not Started
 
-- Menus API
-- Food API
 - Meal tracking
 - Authentication
-- Frontend dashboard
+- Nutrition dashboard, goals, and history
 - Brown dining integration
 - Recommendation engine
 - AI integration
@@ -56,13 +59,13 @@ Database: PostgreSQL; local database name `brownbites` (verified)
 
 Database access: `pg` Pool with raw parameterized SQL in repositories
 
-Current request flow for dining locations (React is not connected yet):
+Current request flow for dining locations, menus, and foods:
 
 ```text
-HTTP Client → Express Route → Controller → Service → Repository → PostgreSQL
+React → Express Route → Controller → Service → Repository → PostgreSQL
 ```
 
-The frontend does not yet call the Dining Locations API. Update this diagram to start with React when that connection is added. Health still has no database access.
+Health still has no database access.
 
 ## Current API Endpoints
 
@@ -71,8 +74,10 @@ The frontend does not yet call the Dining Locations API. Update this diagram to 
 | GET | `/api/v1/health` | Returns `{ "status": "ok" }`. No database. |
 | GET | `/api/v1/dining-locations` | Lists dining locations. HTTP 200. |
 | GET | `/api/v1/dining-locations/:id` | Returns one dining location. HTTP 200, 400, or 404. |
+| GET | `/api/v1/dining-locations/:id/menus` | Menus for one dining hall. HTTP 200 or 400. |
+| GET | `/api/v1/menus/:id/foods` | Foods on one menu. HTTP 200 or 400. |
 
-Live HTTP responses were not verified in this documentation pass (API process was not running on port 3001). Behavior below is from source.
+Live responses were checked on 2026-11-24 against the local API. Dining-location errors use `error`, not `data`. PostgreSQL `numeric` columns arrive as strings such as `"180.00"`. `menu_date` arrives as an ISO timestamp such as `"2026-10-11T05:00:00.000Z"`.
 
 ### Dining Locations API
 
@@ -97,14 +102,28 @@ diningLocationRoutes
 `GET /api/v1/dining-locations/:id`
 
 - Controller parses `id` with `Number(req.params.id)`.
-- HTTP **400** if `id` is not an integer greater than 0: `{ "success": false, "data": "Invalid request, must input a number greater than 0" }`
+- HTTP **400** if `id` is not an integer greater than 0: `{ "success": false, "error": "Invalid request, must input a number greater than 0" }`
 - Repository: `SELECT id, name FROM dining_locations WHERE id = $1` (parameterized).
-- HTTP **404** if no row: `{ "success": false, "data": "Not Found. No dining location exists" }`
+- HTTP **404** if no row: `{ "success": false, "error": "Not Found. No dining location exists" }`
 - HTTP **200** if found: `{ "success": true, "data": { "id", "name" } }`
 
 These handlers do not use local try/catch. Express 5 can forward rejected promises from async route handlers to error-handling middleware. Centralized error handling is not implemented yet and is deferred.
 
-There is no Menus API (no menu routes, controllers, services, or repositories).
+### Menus API
+
+`GET /api/v1/dining-locations/:id/menus`
+
+- HTTP **400** if `id` is not an integer greater than 0: `{ "success": false, "error": "..." }`
+- HTTP **200**: `{ "success": true, "data": [ { "id", "menu_date", "meal_type", "dining_location_id" }, ... ] }`
+- An unknown dining hall returns **200** with an empty array.
+
+### Foods API
+
+`GET /api/v1/menus/:id/foods`
+
+- HTTP **400** if `id` is not an integer greater than 0.
+- HTTP **200**: `{ "success": true, "data": [ { "name", "serving_size", "calories", "protein_g", "carbs_g", "fat_g" }, ... ] }`
+- Food rows do not include `id`. Calories and macros are PostgreSQL numeric strings.
 
 ## Current Database Tables
 
@@ -127,7 +146,12 @@ Other planned tables (`users`, `user_goals`, `meals`, `meal_items`) do not exist
 
 ## Important Files
 
-- `client/src/App.tsx` — minimal landing UI
+- `client/src/App.tsx` — dining hall, menu, and food browser
+- `client/src/hooks/useDiningBrowser.ts` — selection state and request cancellation
+- `client/src/services/apiClient.ts` — shared API fetch using `VITE_API_URL`
+- `client/src/services/diningApi.ts`
+- `client/src/services/menuApi.ts`
+- `client/src/services/foodApi.ts`
 - `client/vite.config.ts` — Vite + React + Tailwind plugins
 - `server/src/app.ts` — Express application (middleware and routes)
 - `server/src/server.ts` — process entry point (listen on a port)
@@ -155,4 +179,4 @@ Other planned tables (`users`, `user_goals`, `meals`, `meal_items`) do not exist
 
 ## Next Step
 
-Implement the Menus API on top of the existing `menus` table, following the same Route → Controller → Service → Repository → PostgreSQL pattern as dining locations.
+Ingest real Brown dining menus into PostgreSQL. The browser works, but the local data is only a sample: Sharpe Refectory lunch has one food, and the other posted meals have none.

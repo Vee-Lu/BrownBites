@@ -1,0 +1,106 @@
+
+---
+description: BrownBites frontend development, React learning, and UI styling responsibilities
+globs: client/src/**/*.tsx,client/src/**/*.ts,client/src/**/*.css
+alwaysApply: false
+---
+
+# BrownBites Frontend Development Guidelines
+
+## Goal
+
+The developer wants to learn foundational React and TypeScript concepts while delegating visual design and styling to Cursor.
+
+Prioritize learning important programming concepts without spending unnecessary time on CSS or visual design.
+
+## Developer Responsibilities
+
+The developer should personally implement meaningful frontend functionality, including:
+
+- React component logic
+- TypeScript interfaces and types
+- API integration using fetch
+- React hooks (useState, useEffect)
+- State management
+- Event handlers
+- Data transformations
+- Filtering and searching
+- Nutrition calculations
+- Important application logic
+
+For these tasks, follow the Learning Mode instructions in brownbites-development.mdc.
+
+Do not automatically complete meaningful programming assignments.
+
+## Cursor Responsibilities
+
+Cursor may independently implement:
+
+- Tailwind CSS styling
+- Responsive layouts for desktop, tablet, and mobile
+- Colors, typography, and spacing
+- Component visual design
+- Navigation styling
+- Animations and hover effects
+- Accessibility improvements
+- Visual loading, error, and empty states
+- Overall UI consistency
+
+Cursor may modify JSX markup for presentation purposes but must preserve the underlying application functionality.
+
+## Restrictions
+
+1. Do not implement unfinished TODO functions unless explicitly requested.
+2. Do not rewrite API integration or business logic during styling tasks.
+3. Do not replace existing React state management.
+4. Do not modify backend code or PostgreSQL schemas for styling tasks.
+5. Do not install additional dependencies without explaining why and obtaining approval.
+6. Do not create duplicate components.
+7. Follow the existing project architecture.
+8. Ask before making significant architectural changes.
+9. Preserve existing functionality.
+
+## Frontend Learning Workflow
+
+When asked to implement frontend functionality:
+
+1. Explain the goal and relevant React concepts.
+2. Provide starter code or component skeletons when appropriate.
+3. Leave meaningful logic as TODOs.
+4. Allow the developer to implement the functionality.
+5. Review their implementation.
+6. Provide hints before full solutions.
+
+## UI Styling Workflow
+
+When explicitly asked to style a component or page:
+
+1. Inspect the existing components.
+2. Preserve props, state, event handlers, and API calls.
+3. Implement modern, clean, responsive styling.
+4. Make the UI consistent with the BrownBites application.
+5. Verify that functionality still works.
+6. Summarize the changes.
+
+Cursor can complete styling tasks directly without requiring the developer to write CSS.
+
+## Design Direction
+
+BrownBites is a university dining and nutrition tracking application.
+
+Prefer:
+- Clean, modern interfaces
+- Simple and intuitive navigation
+- Readable typography
+- Responsive cards and layouts
+- Consistent spacing and colors
+- Clear presentation of calories and macronutrients
+- Accessible and user-friendly interactions
+
+Avoid unnecessary visual complexity.
+
+## Rule Priority
+
+The existing brownbites-development.mdc remains the main project development rule.
+
+This file adds frontend-specific responsibilities and must not override the existing architecture, learning workflow, or documentation requirements.
